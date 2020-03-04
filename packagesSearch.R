@@ -2,3 +2,7 @@ as.data.frame(installed.packages()[,c(3:4)])
 
 install.packages("ggplot2")
 install.packages("RODBC")
+install.packages("psych")
+install.packages("readr")
+install.packages("data.table")
+install.packages("rlist")
