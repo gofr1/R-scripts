@@ -4,7 +4,7 @@ factorialCalc <- function(x) {
     } else if (x == 0) {
        1
     } else {
-       x * factorial_calc(x-1)
+       x * factorialCalc(x-1)
     }
 }
 
@@ -24,9 +24,9 @@ retFibonacci <- function(x) {
    }
 }
 
-retFibonacci(2)
+retFibonacci(10)
 
-print(factorial_calc(5)) # 120
-print(factorial_calc(10)) # 3628800
-print(factorial_calc(-1)) # Must be positive integer
-print(factorial_calc(0)) # 1
+print(factorialCalc(5)) # 120
+print(factorialCalc(10)) # 3628800
+print(factorialCalc(-1)) # Must be positive integer
+print(factorialCalc(0)) # 1
