@@ -1,4 +1,4 @@
-setwd("../data_tbl")
+setwd("./data_tbl")
 getwd()
 
 library(dplyr)
