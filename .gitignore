@@ -1,3 +1,5 @@
 .vscode
 .vs
 *.csv
+*.xlsx
+*.docx
