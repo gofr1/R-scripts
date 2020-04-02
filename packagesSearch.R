@@ -3,6 +3,8 @@ as.data.frame(installed.packages()[,c(3:4)])
 install.packages("tidyverse") # install few packages
 
 install.packages("psych")
+install.packages("rio")
+install.packages("party")
 install.packages("readr")
 install.packages("data.table")
 install.packages("rlist")
