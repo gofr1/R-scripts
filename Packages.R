@@ -19,16 +19,6 @@ library(readr)
 # rio::import()
 (df <- import("data/StateData.xlsx") %>% as_tibble())
 
-df <- import("data/StateData.xlsx") %>% 
-    as_tibble() %>%
-    select(
-        state_code,
-        psychRegions,
-        instagram:modernDance) %>%
-    mutate(psychRegions = as.factor(psychRegions)) %>%
-    rename(y=psychRegions) %>%
-    print()
-
 # Analyze data
 # decision tree
 fit <- ctree(y ~ ., data = df[, -1]) # create tree
