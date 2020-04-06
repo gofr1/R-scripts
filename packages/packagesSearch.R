@@ -13,6 +13,7 @@ install.packages("rpart.plot")
 install.packages("corrplot")
 install.packages("e1071")
 install.packages("randomForest")
+install.packages("Hmisc")
 
 # graphics
 install.packages("ggplot2")
