@@ -45,3 +45,9 @@ install.packages("odbc")
 # neural networks
 install.packages("keras")
 install.packages("neuralnet")
+
+# Error: package or namespace load failed for ‘****’ in dyn.load(file, DLLpath = DLLpath, ...):
+#  unable to load shared object '/usr/local/lib/R/site-library/stringi/libs/stringi.so':
+#   libicui18n.so.63: cannot open shared object file: No such file or directory
+#! fix
+install.packages("stringi",dep=TRUE)
