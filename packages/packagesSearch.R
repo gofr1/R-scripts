@@ -1,5 +1,13 @@
 as.data.frame(installed.packages()[,c(3:4)])
 
+# check package version
+packageVersion("dplyr")
+
+# get package description
+packageDescription("dplyr")
+
+# Packages installation
+
 install.packages("tidyverse") # install few packages
 
 install.packages("psych")
@@ -32,6 +40,7 @@ install.packages("microbenchmark")
 
 # databases
 install.packages("RODBC")
+install.packages("odbc")
 
 # neural networks
 install.packages("keras")
