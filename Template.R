@@ -7,5 +7,5 @@ library(tidyverse)
 rm(list = ls())
 
 # Clear packages
-detach("package:rio", unload= T)
-detach("package:tidyverse", unload= T)
+detach("package:rio", unload = T)
+detach("package:tidyverse", unload = T)
