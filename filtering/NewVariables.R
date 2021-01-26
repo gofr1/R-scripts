@@ -3,7 +3,7 @@ library(rio)
 library(tidyverse)
 
 # load data
-df <- import("data/StateData.xlsx") %>% 
+df <- import("data/StateData.xlsx") %>%
     as_tibble() %>%
     select(
         state_code,
@@ -36,5 +36,5 @@ df %>%
 rm(list = ls())
 
 # Clear packages
-detach("package:rio", unload= T)
-detach("package:tidyverse", unload= T)
+detach("package:rio", unload = T)
+detach("package:tidyverse", unload = T)
