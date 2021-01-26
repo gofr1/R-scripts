@@ -57,3 +57,6 @@ install.packages("stringi", dep = TRUE)
 
 # In order to install R LSP Client extension
 install.packages("languageserver")
+
+# sudo apt-get install cargo
+install.packages("gifski")
