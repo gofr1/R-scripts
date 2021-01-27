@@ -4,7 +4,7 @@ library(tidyverse)
 library(Hmisc)
 
 # load data
-df <- import("data/StateData.xlsx") %>% 
+df <- import("data/StateData.xlsx") %>%
     as_tibble() %>%
     select(instagram:modernDance) %>%
     print()
@@ -34,6 +34,6 @@ df %>%
 rm(list = ls())
 
 # Clear packages
-detach("package:rio", unload= T)
-detach("package:tidyverse", unload= T)
-detach("package:Hmisc", unload= T)
+detach("package:rio", unload = T)
+detach("package:tidyverse", unload = T)
+detach("package:Hmisc", unload = T)

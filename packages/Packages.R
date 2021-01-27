@@ -38,7 +38,7 @@ rm(list = ls())
 
 # Clear packages
 p_unload(all)
-detach("package:datasets", unload= T)
+detach("package:datasets", unload = T)
 
 # clear plot
 dev.off()

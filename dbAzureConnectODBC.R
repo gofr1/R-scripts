@@ -2,10 +2,14 @@ library(odbc)
 
 source("getConStr.R")
 
-dbConString <- getConnectionString('azure_ad', '../python_learning/.env/db.conf', ';')
+dbconstring <- getConnectionString(
+    "azure_ad",
+    "../python_learning/.env/db.conf",
+    ";"
+)
 
-az <- odbc::dbConnect(odbc(), .connection_string = dbConString)
+az <- odbc::dbConnect(odbc(), .connection_string = dbconstring)
 result <- dbSendQuery(az, "select * FROM [dbo].[currency]")
 res <- dbFetch(result)
 
-print(res[,c(2:3)]) 
+print(res[, c(2:3)])
