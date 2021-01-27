@@ -60,3 +60,6 @@ install.packages("languageserver")
 
 # sudo apt-get install cargo
 install.packages("gifski")
+
+# to work with server.R
+install.packages("shiny")

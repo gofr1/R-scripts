@@ -45,7 +45,7 @@ getConnectionString <- function(configName, filePath, sepParam) {
         if (getIt == 1 & i > strNum) {
             row <- strsplit(str_row, ": ")[[1]]
             paramValue <- paste(row[1],row[2], sep = '=')
-            conStr <- paste(conStr, paramValue, sepParam, sep ='')
+            conStr <- paste(conStr, paramValue, sepParam, sep = '')
         }
     }
     return(conStr)

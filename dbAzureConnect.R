@@ -1,11 +1,15 @@
 library(RODBC)
 source("getConStr.R")
 
-dbConString <- getConnectionString('azure_ad', '../python_learning/.env/db.conf', ';')
+dbconstring <- getConnectionString(
+    "azure_ad",
+    "../python_learning/.env/db.conf",
+    ";"
+)
 
-dbhandle <- odbcDriverConnect(dbConString)
-res <- sqlQuery(dbhandle, 'select * FROM [dbo].[currency]')
+dbhandle <- odbcDriverConnect(dbconstring)
+res <- sqlQuery(dbhandle, "SELECT * FROM [dbo].[currency]")
 odbcClose(dbhandle)
 # odbcCloseAll()
 
-print(res[,c(2:3)]) 
+print(res[, c(2:3)])
