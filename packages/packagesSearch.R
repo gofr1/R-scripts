@@ -63,3 +63,6 @@ install.packages("gifski")
 
 # to work with server.R
 install.packages("shiny")
+
+# mongodb
+install.packages("mongolite")
