@@ -41,3 +41,35 @@ print(ma_nb_zips)
 
 nrow(ma_nb_zips)
 #* [1] 4
+
+# create collection with example data
+dmd <- mongo(
+  collection = "diamonds",
+  db = "test",
+  url = mongo_conn_param
+)
+
+dmd$insert(ggplot2::diamonds)
+#* List of 5
+#*  $ nInserted  : num 53940
+#*  $ nMatched   : num 0
+#*  $ nRemoved   : num 0
+#*  $ nUpserted  : num 0
+#*  $ writeErrors: list()
+
+# Example of a document
+#* {
+#*   "_id": {
+#*     "$oid": "6013db824ed5d103a73ca256"
+#*   },
+#*   "carat": 0.23,
+#*   "cut": "Ideal",
+#*   "color": "E",
+#*   "clarity": "SI2",
+#*   "depth": 61.5,
+#*   "table": 55,
+#*   "price": 326,
+#*   "x": 3.95,
+#*   "y": 3.98,
+#*   "z": 2.43
+#* }
