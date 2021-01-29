@@ -27,7 +27,7 @@ zips <- mongo(
   url = mongo_conn_param
 )
 
-allzips <- zips$find('{}')
+allzips <- zips$find("{}")
 print(allzips)
 
 ma_nb_zips <- zips$find('{"state" : "MA", "city": "NEW BEDFORD"}')
@@ -88,3 +88,31 @@ print(sort_and_filter)
 #* 4 Premium     SI2
 #* 5 Premium      I1
 
+# Indexing
+# By default everything is sorted by _id, which is slow
+system.time(dmd$find(sort = '{"price" : 1}', limit = 1))
+#*   user  system elapsed
+#*  0.000   0.002   0.044
+
+# Let's add an index
+dmd$index(add = '{"price" : 1}')
+#*   v key._id key.price    name
+#* 1 2       1        NA    _id_
+#* 2 2      NA         1 price_1
+
+system.time(dmd$find(sort = '{"price" : 1}', limit = 1))
+#*   user  system elapsed
+#*  0.002   0.000   0.003
+# Faster!
+
+# In order to speed up queries involving multiple fields,
+# you can add a cross-index which intersects both field
+dmd$index(add = '{"depth" : 1}')
+dmd$index(add = '{"depth" : 1, "price" : 1}')
+
+system.time(dmd$find(sort = '{"price" : 1, "depth" : 1}', limit = 1))
+
+# Remove indexes
+dmd$index(remove = "depth_1_price_1")
+dmd$index(remove = "depth_1")
+dmd$index(remove = "price_1")
