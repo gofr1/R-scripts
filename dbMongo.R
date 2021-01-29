@@ -73,3 +73,18 @@ dmd$insert(ggplot2::diamonds)
 #*   "y": 3.98,
 #*   "z": 2.43
 #* }
+
+# Sorting & Filtering
+sort_and_filter <- dmd$find(
+  query = '{"cut" : "Premium", "price" : { "$lt" : 1000 } }',
+  fields = '{"cut" : true, "clarity" : true, "_id": false}',
+  limit = 5
+)
+print(sort_and_filter)
+#*       cut clarity
+#* 1 Premium     SI1
+#* 2 Premium     VS2
+#* 3 Premium     SI1
+#* 4 Premium     SI2
+#* 5 Premium      I1
+
