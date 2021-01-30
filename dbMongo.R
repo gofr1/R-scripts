@@ -147,3 +147,15 @@ mongolite_issues$find(
   query = '{"created_at": { "$gte" : { "$date" : "2020-01-01T00:00:00Z" }}}',
   fields = '{"created_at" : true, "user.login" : true, "title":true, "_id": false}'
 )
+
+# Select by _id
+mongolite_issues$find(fields= '{"created_at":true, "_id":true}', limit = 5)
+#*                        _id          created_at
+#* 1 601542ad7ec71461353392c2 2020-12-22 11:46:29
+#* 2 601542ad7ec71461353392c3 2020-10-22 10:30:02
+#* 3 601542ad7ec71461353392c4 2020-06-12 16:02:33
+#* 4 601542ad7ec71461353392c5 2020-06-11 17:05:38
+#* 5 601542ad7ec71461353392c6 2020-06-02 14:12:07
+
+# Use the {"$oid"} operator (similar to ObjectId() in mongodb) to select a record by it’s _id:
+mongolite_issues$find(query = '{"_id" : {"$oid":"601542ad7ec71461353392c4"}}')
