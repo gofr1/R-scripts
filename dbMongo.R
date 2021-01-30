@@ -116,3 +116,12 @@ system.time(dmd$find(sort = '{"price" : 1, "depth" : 1}', limit = 1))
 dmd$index(remove = "depth_1_price_1")
 dmd$index(remove = "depth_1")
 dmd$index(remove = "price_1")
+
+# Iteration
+# perform query and return the iterator
+it <- dmd$iterate('{"cut" : "Premium"}', sort = '{"price": -1}', limit = 10)
+
+# read records from the iterator one by one
+while(!is.null(x <- it$one())) {
+  cat(sprintf("Found %.2f carat diamond for $%d\n", x$carat, x$price))
+}
