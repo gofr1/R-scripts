@@ -1,5 +1,5 @@
 library(mongolite)
-
+options(width = 200)
 source("getConStr.R")
 
 mongo_conn_param <- get_urllike_connection(
@@ -125,3 +125,25 @@ it <- dmd$iterate('{"cut" : "Premium"}', sort = '{"price": -1}', limit = 10)
 while(!is.null(x <- it$one())) {
   cat(sprintf("Found %.2f carat diamond for $%d\n", x$carat, x$price))
 }
+
+# Select by date
+# Get some data
+mydata <- jsonlite::fromJSON("https://api.github.com/repos/jeroen/mongolite/issues")
+mydata$title <- paste0(substr(mydata$title, 1, 40), "...")
+mydata$created_at <- strptime(mydata$created_at, "%Y-%m-%dT%H:%M:%SZ", 'UTC')
+mydata$closed_at <- strptime(mydata$closed_at, "%Y-%m-%dT%H:%M:%SZ", 'UTC')
+
+# insert into new collection
+mongolite_issues <- mongo(
+  collection = "issues",
+  db = "test",
+  url = mongo_conn_param
+)
+
+mongolite_issues$insert(mydata)
+
+# query data
+mongolite_issues$find(
+  query = '{"created_at": { "$gte" : { "$date" : "2020-01-01T00:00:00Z" }}}',
+  fields = '{"created_at" : true, "user.login" : true, "title":true, "_id": false}'
+)
