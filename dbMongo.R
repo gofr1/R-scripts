@@ -159,3 +159,42 @@ mongolite_issues$find(fields= '{"created_at":true, "_id":true}', limit = 5)
 
 # Use the {"$oid"} operator (similar to ObjectId() in mongodb) to select a record by it’s _id:
 mongolite_issues$find(query = '{"_id" : {"$oid":"601542ad7ec71461353392c4"}}')
+
+# Insert
+# Create a new collection (optional)
+test <- mongo(
+  collection = "iris",
+  db = "test",
+  url = mongo_conn_param
+)
+
+test$insert(iris)
+#* List of 5
+#*  $ nInserted  : num 150
+#*  $ nMatched   : num 0
+#*  $ nRemoved   : num 0
+#*  $ nUpserted  : num 0
+#*  $ writeErrors: list()
+
+# Or to insert just one object:
+subjects <- mongo(
+  collection = "subjects",
+  db = "test",
+  url = mongo_conn_param
+)
+
+str <- c('{"name" : "John"}' , '{"name": "Mark", "age" : 31}', '{"name": "Andrew"}')
+subjects$insert(str)
+#* List of 6
+#*  $ nInserted  : int 3
+#*  $ nMatched   : int 0
+#*  $ nModified  : int 0
+#*  $ nRemoved   : int 0
+#*  $ nUpserted  : int 0
+#*  $ writeErrors: list()
+
+subjects$find(query = '{}', fields = '{}')
+#*                        _id   name age
+#* 1 6016780bbc0f7c489d7b5d68   John  NA
+#* 2 6016780bbc0f7c489d7b5d69   Mark  31
+#* 3 6016780bbc0f7c489d7b5d6a Andrew  NA
