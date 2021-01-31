@@ -159,3 +159,171 @@ mongolite_issues$find(fields= '{"created_at":true, "_id":true}', limit = 5)
 
 # Use the {"$oid"} operator (similar to ObjectId() in mongodb) to select a record by it’s _id:
 mongolite_issues$find(query = '{"_id" : {"$oid":"601542ad7ec71461353392c4"}}')
+
+# Insert
+# Create a new collection (optional)
+test <- mongo(
+  collection = "iris",
+  db = "test",
+  url = mongo_conn_param
+)
+
+test$insert(iris)
+#* List of 5
+#*  $ nInserted  : num 150
+#*  $ nMatched   : num 0
+#*  $ nRemoved   : num 0
+#*  $ nUpserted  : num 0
+#*  $ writeErrors: list()
+
+# Or to insert just one object:
+subjects <- mongo(
+  collection = "subjects",
+  db = "test",
+  url = mongo_conn_param
+)
+
+str <- c('{"name" : "John"}' , '{"name": "Mark", "age" : 31}', '{"name": "Andrew"}')
+subjects$insert(str)
+#* List of 6
+#*  $ nInserted  : int 3
+#*  $ nMatched   : int 0
+#*  $ nModified  : int 0
+#*  $ nRemoved   : int 0
+#*  $ nUpserted  : int 0
+#*  $ writeErrors: list()
+
+subjects$find(query = '{}', fields = '{}')
+#*                        _id   name age
+#* 1 6016780bbc0f7c489d7b5d68   John  NA
+#* 2 6016780bbc0f7c489d7b5d69   Mark  31
+#* 3 6016780bbc0f7c489d7b5d6a Andrew  NA
+
+# Remove
+subjects$count()
+#* [1] 3
+
+subjects$remove('{"name" : "Andrew"}')
+subjects$count()
+#* [1] 2
+
+str <- c('{"name" : "Bob", "age" : 24}' , '{"name": "Joe", "age" : 26}', '{"name": "Greg", "age" : 45}')
+subjects$insert(str)
+subjects$count()
+#* [1] 5
+
+# just_one option to delete a single record
+subjects$remove('{"age" : {"$gte" : 30}}', just_one = TRUE)
+subjects$count()
+#* [1] 4
+
+# To delete all records in the collection (but not the collection itself):
+subjects$remove('{}')
+subjects$count()
+#* [1] 0
+
+# drop() operator will delete an entire collection.
+subjects$drop()
+
+# Update and upsert
+str <- c('{"name" : "John"}' , '{"name": "Mark", "age" : 31}', '{"name": "Andrew"}')
+subjects$insert(str)
+
+subjects$find()
+#*     name age
+#* 1   John  NA
+#* 2   Mark  31
+#* 3 Andrew  NA
+
+subjects$update('{"name":"John"}', '{"$set":{"age": 27}}')
+#* List of 3
+#*  $ modifiedCount: int 1
+#*  $ matchedCount : int 1
+#*  $ upsertedCount: int 0
+
+subjects$find()
+#*     name age
+#* 1   John  27
+#* 2   Mark  31
+#* 3 Andrew  NA
+
+# By default, the update() method updates a single document. To update multiple documents, use the multi option in the update() method.
+subjects$update('{}', '{"$set":{"has_age": false}}', multiple = TRUE)
+#* List of 3
+#*  $ modifiedCount: int 3
+#*  $ matchedCount : int 3
+#*  $ upsertedCount: int 0
+
+subjects$find()
+#*     name age has_age
+#* 1   John  27   FALSE
+#* 2   Mark  31   FALSE
+#* 3 Andrew  NA   FALSE
+
+subjects$update('{"age" : {"$gte" : 0}}', '{"$set":{"has_age": true}}', multiple = TRUE)
+#* List of 3
+#*  $ modifiedCount: int 2
+#*  $ matchedCount : int 2
+#*  $ upsertedCount: int 0
+
+subjects$find()
+#*     name age has_age
+#* 1   John  27    TRUE
+#* 2   Mark  31    TRUE
+#* 3 Andrew  NA   FALSE
+
+# If no document matches the update condition, the default behavior of the update method is to do nothing. 
+# By specifying the upsert option to true, the update operation either updates matching document(s) or 
+# inserts a new document if no matching document exists.
+
+subjects$update('{"name":"Greg"}', '{"$set":{"age": 28}}', upsert = TRUE)
+#* List of 4
+#*  $ modifiedCount: int 0
+#*  $ matchedCount : int 0
+#*  $ upsertedCount: int 1
+#*  $ upsertedId   : chr "60167bd9e697844bb2a68161"
+
+subjects$find()
+#*     name age has_age
+#* 1   John  27    TRUE
+#* 2   Mark  31    TRUE
+#* 3 Andrew  NA   FALSE
+#* 4   Greg  28      NA
+
+# Array Filters
+# Starting in MongoDB 3.6, when updating an array field, you can specify 
+# arrayFilters that determine which array elements to update.
+
+students <- mongo(
+  collection = "students",
+  db = "test",
+  url = mongo_conn_param
+)
+students$insert(c(
+  '{ "student" : 1, "grades" : [ 4, 5, 3 ] }',
+  '{ "student" : 2, "grades" : [ 5, 4, 4  ] }',
+  '{ "student" : 3, "grades" : [ 5, 5, 3] }')
+)
+
+students$find()
+#*   student  grades
+#* 1       1 4, 5, 3
+#* 2       2 5, 4, 4
+#* 3       3 5, 5, 3
+
+students$update(
+  query = '{}',
+  update = '{"$set":{"grades.$[element]":4}}',
+  filters = '[{"element": {"$lte":4}}]',
+  multiple = TRUE
+)
+#* List of 3
+#*  $ modifiedCount: int 2
+#*  $ matchedCount : int 3
+#*  $ upsertedCount: int 0
+
+students$find()
+#*   student  grades
+#* 1       1 4, 5, 4
+#* 2       2 5, 4, 4
+#* 3       3 5, 5, 4
