@@ -289,3 +289,41 @@ subjects$find()
 #* 2   Mark  31    TRUE
 #* 3 Andrew  NA   FALSE
 #* 4   Greg  28      NA
+
+# Array Filters
+# Starting in MongoDB 3.6, when updating an array field, you can specify 
+# arrayFilters that determine which array elements to update.
+
+students <- mongo(
+  collection = "students",
+  db = "test",
+  url = mongo_conn_param
+)
+students$insert(c(
+  '{ "student" : 1, "grades" : [ 4, 5, 3 ] }',
+  '{ "student" : 2, "grades" : [ 5, 4, 4  ] }',
+  '{ "student" : 3, "grades" : [ 5, 5, 3] }')
+)
+
+students$find()
+#*   student  grades
+#* 1       1 4, 5, 3
+#* 2       2 5, 4, 4
+#* 3       3 5, 5, 3
+
+students$update(
+  query = '{}',
+  update = '{"$set":{"grades.$[element]":4}}',
+  filters = '[{"element": {"$lte":4}}]',
+  multiple = TRUE
+)
+#* List of 3
+#*  $ modifiedCount: int 2
+#*  $ matchedCount : int 3
+#*  $ upsertedCount: int 0
+
+students$find()
+#*   student  grades
+#* 1       1 4, 5, 4
+#* 2       2 5, 4, 4
+#* 3       3 5, 5, 4
