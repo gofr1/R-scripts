@@ -198,3 +198,29 @@ subjects$find(query = '{}', fields = '{}')
 #* 1 6016780bbc0f7c489d7b5d68   John  NA
 #* 2 6016780bbc0f7c489d7b5d69   Mark  31
 #* 3 6016780bbc0f7c489d7b5d6a Andrew  NA
+
+# Remove
+subjects$count()
+#* [1] 3
+
+subjects$remove('{"name" : "Andrew"}')
+subjects$count()
+#* [1] 2
+
+str <- c('{"name" : "Bob", "age" : 24}' , '{"name": "Joe", "age" : 26}', '{"name": "Greg", "age" : 45}')
+subjects$insert(str)
+subjects$count()
+#* [1] 5
+
+# just_one option to delete a single record
+subjects$remove('{"age" : {"$gte" : 30}}', just_one = TRUE)
+subjects$count()
+#* [1] 4
+
+# To delete all records in the collection (but not the collection itself):
+subjects$remove('{}')
+subjects$count()
+#* [1] 0
+
+# drop() operator will delete an entire collection.
+subjects$drop()
