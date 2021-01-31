@@ -224,3 +224,68 @@ subjects$count()
 
 # drop() operator will delete an entire collection.
 subjects$drop()
+
+# Update and upsert
+str <- c('{"name" : "John"}' , '{"name": "Mark", "age" : 31}', '{"name": "Andrew"}')
+subjects$insert(str)
+
+subjects$find()
+#*     name age
+#* 1   John  NA
+#* 2   Mark  31
+#* 3 Andrew  NA
+
+subjects$update('{"name":"John"}', '{"$set":{"age": 27}}')
+#* List of 3
+#*  $ modifiedCount: int 1
+#*  $ matchedCount : int 1
+#*  $ upsertedCount: int 0
+
+subjects$find()
+#*     name age
+#* 1   John  27
+#* 2   Mark  31
+#* 3 Andrew  NA
+
+# By default, the update() method updates a single document. To update multiple documents, use the multi option in the update() method.
+subjects$update('{}', '{"$set":{"has_age": false}}', multiple = TRUE)
+#* List of 3
+#*  $ modifiedCount: int 3
+#*  $ matchedCount : int 3
+#*  $ upsertedCount: int 0
+
+subjects$find()
+#*     name age has_age
+#* 1   John  27   FALSE
+#* 2   Mark  31   FALSE
+#* 3 Andrew  NA   FALSE
+
+subjects$update('{"age" : {"$gte" : 0}}', '{"$set":{"has_age": true}}', multiple = TRUE)
+#* List of 3
+#*  $ modifiedCount: int 2
+#*  $ matchedCount : int 2
+#*  $ upsertedCount: int 0
+
+subjects$find()
+#*     name age has_age
+#* 1   John  27    TRUE
+#* 2   Mark  31    TRUE
+#* 3 Andrew  NA   FALSE
+
+# If no document matches the update condition, the default behavior of the update method is to do nothing. 
+# By specifying the upsert option to true, the update operation either updates matching document(s) or 
+# inserts a new document if no matching document exists.
+
+subjects$update('{"name":"Greg"}', '{"$set":{"age": 28}}', upsert = TRUE)
+#* List of 4
+#*  $ modifiedCount: int 0
+#*  $ matchedCount : int 0
+#*  $ upsertedCount: int 1
+#*  $ upsertedId   : chr "60167bd9e697844bb2a68161"
+
+subjects$find()
+#*     name age has_age
+#* 1   John  27    TRUE
+#* 2   Mark  31    TRUE
+#* 3 Andrew  NA   FALSE
+#* 4   Greg  28      NA
