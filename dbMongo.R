@@ -327,3 +327,36 @@ students$find()
 #* 1       1 4, 5, 4
 #* 2       2 5, 4, 4
 #* 3       3 5, 5, 4
+
+# JSON
+
+subjects$export(stdout())
+#* { "_id" : { "$oid" : "60167abbbc0f7c489d7b5d6e" }, "name" : "John", "age" : 27, "has_age" : true }
+#* { "_id" : { "$oid" : "60167abbbc0f7c489d7b5d6f" }, "name" : "Mark", "age" : 31, "has_age" : true }
+#* { "_id" : { "$oid" : "60167abbbc0f7c489d7b5d70" }, "name" : "Andrew", "has_age" : false }
+#* { "_id" : { "$oid" : "60167bd9e697844bb2a68161" }, "name" : "Greg", "age" : 28 }
+
+# to file:
+subjects$export(file("subjects.json"))
+
+# Let’s remove the entire collection, and then import it back from the file:
+subjects$drop()
+subjects$count()
+#* [1] 0
+
+subjects$import(file("subjects.json"))
+subjects$count()
+#* [1] 4
+
+# Export data as json to a memory buffer using raw connections:
+con <- rawConnection(raw(), "wb")
+subjects$export(con)
+json <- rawToChar(rawConnectionValue(con))
+df <- jsonlite::stream_in(textConnection(json), verbose = FALSE)
+head(df)
+close(con)
+#*                       $oid   name age has_age
+#* 1 60167abbbc0f7c489d7b5d6e   John  27    TRUE
+#* 2 60167abbbc0f7c489d7b5d6f   Mark  31    TRUE
+#* 3 60167abbbc0f7c489d7b5d70 Andrew  NA   FALSE
+#* 4 60167bd9e697844bb2a68161   Greg  28      NA
