@@ -122,16 +122,18 @@ dmd$index(remove = "price_1")
 it <- dmd$iterate('{"cut" : "Premium"}', sort = '{"price": -1}', limit = 10)
 
 # read records from the iterator one by one
-while(!is.null(x <- it$one())) {
+while (!is.null(x <- it$one())) {
   cat(sprintf("Found %.2f carat diamond for $%d\n", x$carat, x$price))
 }
 
 # Select by date
 # Get some data
-mydata <- jsonlite::fromJSON("https://api.github.com/repos/jeroen/mongolite/issues")
+mydata <- jsonlite::fromJSON(
+  "https://api.github.com/repos/jeroen/mongolite/issues"
+)
 mydata$title <- paste0(substr(mydata$title, 1, 40), "...")
-mydata$created_at <- strptime(mydata$created_at, "%Y-%m-%dT%H:%M:%SZ", 'UTC')
-mydata$closed_at <- strptime(mydata$closed_at, "%Y-%m-%dT%H:%M:%SZ", 'UTC')
+mydata$created_at <- strptime(mydata$created_at, "%Y-%m-%dT%H:%M:%SZ", "UTC")
+mydata$closed_at <- strptime(mydata$closed_at, "%Y-%m-%dT%H:%M:%SZ", "UTC")
 
 # insert into new collection
 mongolite_issues <- mongo(
@@ -149,7 +151,7 @@ mongolite_issues$find(
 )
 
 # Select by _id
-mongolite_issues$find(fields= '{"created_at":true, "_id":true}', limit = 5)
+mongolite_issues$find(fields = '{"created_at":true, "_id":true}', limit = 5)
 #*                        _id          created_at
 #* 1 601542ad7ec71461353392c2 2020-12-22 11:46:29
 #* 2 601542ad7ec71461353392c3 2020-10-22 10:30:02
@@ -157,7 +159,8 @@ mongolite_issues$find(fields= '{"created_at":true, "_id":true}', limit = 5)
 #* 4 601542ad7ec71461353392c5 2020-06-11 17:05:38
 #* 5 601542ad7ec71461353392c6 2020-06-02 14:12:07
 
-# Use the {"$oid"} operator (similar to ObjectId() in mongodb) to select a record by it’s _id:
+# Use the {"$oid"} operator (similar to ObjectId() in mongodb)
+# to select a record by it’s _id:
 mongolite_issues$find(query = '{"_id" : {"$oid":"601542ad7ec71461353392c4"}}')
 
 # Insert
@@ -183,7 +186,7 @@ subjects <- mongo(
   url = mongo_conn_param
 )
 
-str <- c('{"name" : "John"}' , '{"name": "Mark", "age" : 31}', '{"name": "Andrew"}')
+str <- c('{"name" : "John"}', '{"name": "Mark", "age" : 31}', '{"name": "Andrew"}')
 subjects$insert(str)
 #* List of 6
 #*  $ nInserted  : int 3
@@ -193,7 +196,7 @@ subjects$insert(str)
 #*  $ nUpserted  : int 0
 #*  $ writeErrors: list()
 
-subjects$find(query = '{}', fields = '{}')
+subjects$find(query = "{}", fields = "{}")
 #*                        _id   name age
 #* 1 6016780bbc0f7c489d7b5d68   John  NA
 #* 2 6016780bbc0f7c489d7b5d69   Mark  31
@@ -207,7 +210,7 @@ subjects$remove('{"name" : "Andrew"}')
 subjects$count()
 #* [1] 2
 
-str <- c('{"name" : "Bob", "age" : 24}' , '{"name": "Joe", "age" : 26}', '{"name": "Greg", "age" : 45}')
+str <- c('{"name" : "Bob", "age" : 24}', '{"name": "Joe", "age" : 26}', '{"name": "Greg", "age" : 45}')
 subjects$insert(str)
 subjects$count()
 #* [1] 5
@@ -218,7 +221,7 @@ subjects$count()
 #* [1] 4
 
 # To delete all records in the collection (but not the collection itself):
-subjects$remove('{}')
+subjects$remove("{}")
 subjects$count()
 #* [1] 0
 
@@ -226,7 +229,7 @@ subjects$count()
 subjects$drop()
 
 # Update and upsert
-str <- c('{"name" : "John"}' , '{"name": "Mark", "age" : 31}', '{"name": "Andrew"}')
+str <- c('{"name" : "John"}', '{"name": "Mark", "age" : 31}', '{"name": "Andrew"}')
 subjects$insert(str)
 
 subjects$find()
@@ -272,8 +275,8 @@ subjects$find()
 #* 2   Mark  31    TRUE
 #* 3 Andrew  NA   FALSE
 
-# If no document matches the update condition, the default behavior of the update method is to do nothing. 
-# By specifying the upsert option to true, the update operation either updates matching document(s) or 
+# If no document matches the update condition, the default behavior of the update method is to do nothing.
+# By specifying the upsert option to true, the update operation either updates matching document(s) or
 # inserts a new document if no matching document exists.
 
 subjects$update('{"name":"Greg"}', '{"$set":{"age": 28}}', upsert = TRUE)
@@ -312,7 +315,7 @@ students$find()
 #* 3       3 5, 5, 3
 
 students$update(
-  query = '{}',
+  query = "{}",
   update = '{"$set":{"grades.$[element]":4}}',
   filters = '[{"element": {"$lte":4}}]',
   multiple = TRUE
@@ -360,3 +363,4 @@ close(con)
 #* 2 60167abbbc0f7c489d7b5d6f   Mark  31    TRUE
 #* 3 60167abbbc0f7c489d7b5d70 Andrew  NA   FALSE
 #* 4 60167bd9e697844bb2a68161   Greg  28      NA
+
