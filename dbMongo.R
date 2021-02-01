@@ -364,3 +364,27 @@ close(con)
 #* 3 60167abbbc0f7c489d7b5d70 Andrew  NA   FALSE
 #* 4 60167bd9e697844bb2a68161   Greg  28      NA
 
+# Jsonlite
+mydata <- jsonlite::stream_in(file("subjects.json"), verbose = FALSE)
+print(mydata)
+# This is a convenient way to exchange data in a way with R users that might not have MongoDB.
+#*                       $oid   name age has_age
+#* 1 60167abbbc0f7c489d7b5d6e   John  27    TRUE
+#* 2 60167abbbc0f7c489d7b5d6f   Mark  31    TRUE
+#* 3 60167abbbc0f7c489d7b5d70 Andrew  NA   FALSE
+#* 4 60167bd9e697844bb2a68161   Greg  28      NA
+
+# jsonlite allows for exporting data in a way that is easy to import in Mongo:
+jsonlite::stream_out(mtcars, file("mtcars.json"), verbose = FALSE)
+mt <- mongo(
+  collection = "mtcars",
+  db = "test",
+  url = mongo_conn_param
+)
+mt$import(file("mtcars.json"))
+mt$find()
+#*                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#* Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#* Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#* Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+#* ...
