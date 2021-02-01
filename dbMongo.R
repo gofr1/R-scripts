@@ -388,3 +388,19 @@ mt$find()
 #* Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
 #* Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
 #* ...
+
+# Streaming
+flt <- mongo(
+  collection = "flights",
+  db = "test",
+  url = mongo_conn_param
+)
+flt$import(gzcon(curl::curl("https://jeroen.github.io/data/nycflights13.json.gz")))
+flt$count()
+#* [1] 336776
+
+# Same in jsonlite:
+#? flights <- jsonlite::stream_in(
+#?   gzcon(curl::curl("https://jeroen.github.io/data/nycflights13.json.gz")), verbose = FALSE)
+#? nrow(flights)
+
