@@ -404,3 +404,10 @@ flt$count()
 #?   gzcon(curl::curl("https://jeroen.github.io/data/nycflights13.json.gz")), verbose = FALSE)
 #? nrow(flights)
 
+# BSON
+# BSON is a binary version of JSON
+flt$export(file("flights.bson"), bson = TRUE)
+flt$drop()
+# Import back:
+flt$import(file("flights.bson"), bson = TRUE)
+#* [1] 336776
