@@ -439,3 +439,11 @@ print(stats)
 library(ggplot2)
 ggplot(aes(carrier, count), data = stats) + geom_col()
 
+# Aggregation Iterators
+iter <- flt$aggregate(
+  '[{"$group":{"_id":"$carrier", "count": {"$sum":1}, "average":{"$avg":"$distance"}}}]',
+  options = '{"allowDiskUse":true}',
+  iterate = TRUE
+)
+# get first ten results
+iter$json(10)
