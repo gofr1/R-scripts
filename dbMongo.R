@@ -447,3 +447,21 @@ iter <- flt$aggregate(
 )
 # get first ten results
 iter$json(10)
+
+# Map & Reduce
+histdata <- flt$mapreduce(
+  map = "function() {emit(Math.floor(this.distance/100)*100, 1)}",
+  reduce = "function(id, counts) {return Array.sum(counts)}"
+)
+names(histdata) <- c("distance", "count")
+print(histdata)
+#*    distance count
+#* 1      1800   315
+#* 2       300  7748
+#* 3      1400  9313
+#* 4      2100  4656
+#* 5      1900  2467
+#* 6       500 26925
+#* 7      1200   332
+#* ...
+ggplot(aes(distance, count), data = histdata) + geom_col()
