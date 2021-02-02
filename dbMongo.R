@@ -411,3 +411,31 @@ flt$drop()
 # Import back:
 flt$import(file("flights.bson"), bson = TRUE)
 #* [1] 336776
+
+# Aggregate
+stats <- flt$aggregate(
+  '[{"$group":{"_id":"$carrier", "count": {"$sum":1}, "average":{"$avg":"$distance"}}}]',
+  options = '{"allowDiskUse":true}'
+)
+names(stats) <- c("carrier", "count", "average")
+print(stats)
+#*    carrier count   average
+#* 1       VX  5162 2499.4822
+#* 2       DL 48110 1236.9012
+#* 3       AS   714 2402.0000
+#* 4       9E 18460  530.2358
+#* 5       US 20536  553.4563
+#* 6       UA 58665 1529.1149
+#* 7       MQ 26397  569.5327
+#* 8       AA 32729 1340.2360
+#* 9       FL  3260  664.8294
+#* 10      WN 12275  996.2691
+#* 11      B6 54635 1068.6215
+#* 12      EV 54173  562.9917
+#* 13      YV   601  375.0333
+#* 14      OO    32  500.8125
+#* 15      HA   342 4983.0000
+#* 16      F9   685 1620.0000
+library(ggplot2)
+ggplot(aes(carrier, count), data = stats) + geom_col()
+
