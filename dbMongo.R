@@ -465,3 +465,43 @@ print(histdata)
 #* 7      1200   332
 #* ...
 ggplot(aes(distance, count), data = histdata) + geom_col()
+
+# Running Commands
+# For mongodb operations that mongolite currently does not implement, 
+# you can use the raw database command using the run() method
+command_run <- mongo(url = mongo_conn_param)
+
+command_run$run('{"ping": 1}')
+#* $ok
+#* [1] 1
+
+command_run$run('{"listCollections":1}')
+#* $cursor$firstBatch
+#*       name       type info.readOnly   info.uuid idIndex.v idIndex._id idIndex.name
+#* 1 subjects collection         FALSE         ...         2           1         _id_
+#* 2   mtcars collection         FALSE         ...         2           1         _id_
+#* 3 diamonds collection         FALSE         ...         2           1         _id_
+#* 4   issues collection         FALSE         ...         2           1         _id_
+#* 5     iris collection         FALSE         ...         2           1         _id_
+#* 6     zips collection         FALSE         ...         2           1         _id_
+#* 7 products collection         FALSE         ...         2           1         _id_
+#* 8 students collection         FALSE         ...         2           1         _id_
+#* 9  flights collection         FALSE         ...         2           1         _id_
+
+
+admin <- mongo(db = "admin", url = mongo_conn_param)
+admin$run('{"listDatabases":1}')
+#* $databases
+#*     name sizeOnDisk empty
+#* 1  admin     163840 FALSE
+#* 2 config      73728 FALSE
+#* 3  local      86016 FALSE
+#* 4 nodedb     196608 FALSE
+#* 5   test   30724096 FALSE
+#* 
+#* $totalSize
+#* [1] 31244288
+#* 
+#* $ok
+#* [1] 1
+
