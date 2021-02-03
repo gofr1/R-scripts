@@ -505,3 +505,5 @@ admin$run('{"listDatabases":1}')
 #* $ok
 #* [1] 1
 
+# Server Info
+command_run$info()
