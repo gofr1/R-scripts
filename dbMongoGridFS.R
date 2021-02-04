@@ -102,3 +102,30 @@ head(df)
 
 # Drop GridFS when done
 fs$drop()
+
+# Vectorized Upload/Download
+# The fs$upload() and fs$download() methods provide an alternative API
+# specifically for transferring files between GridFS and your local disk.
+#
+# This API is vectorized so you can transfer many files at once.
+# However transfers cannot be interrupted and will block R until completed.
+# This API is only recommended to upload/download a large number of small files.
+# Connecting to GridFS
+mb <- gridfs(
+  db = "mongo-book",
+  url = mongo_conn_param,
+  prefix = "mongobook"
+)
+# will upload all files in current directory
+mb$upload(list.files(".", recursive = TRUE))
+
+# Download all files in one command:
+files <- mb$find()
+dir.create("outputfiles")
+mb$download(files$name, "outputfiles")
+# TODO: if filenames contein spaces you will get error
+
+# Get a list of files
+list.files("outputfiles")
+
+unlink("outputfiles", recursive = TRUE)
