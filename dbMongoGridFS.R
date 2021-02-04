@@ -129,3 +129,33 @@ mb$download(files$name, "outputfiles")
 list.files("outputfiles")
 
 unlink("outputfiles", recursive = TRUE)
+
+# Select by ID
+allfiles <- mb$find()
+head(allfiles)
+
+# To select a file by it’s id, prefix the name with “id:” for example:
+id <- paste0("id:", allfiles$id[1])
+print(id)
+#* [1] "id:601bcfffe114c600942101a5"
+
+mb$read(id, tempfile(pattern = "tmp-file-from-mongo", tmpdir = "/tmp"))
+#* [{ "_id" : { "$oid" : "601bcfffe114c600942101a5" } }]: read 1.09 kB (done) 
+#*List of 6
+#* $ id      : chr "601bcfffe114c600942101a5"
+#* $ name    : chr "filename"
+#* $ size    : num 1091
+#* $ date    : POSIXct[1:1], format: "2021-02-04 13:44:15"
+#* $ type    : chr "text/plain"
+#* $ metadata: chr NA
+
+# sudo ls -lah /tmp/ | grep mongo
+#* -rw-rw-r--   1 user   user   1.1K Feb  4 14:09 tmp-file-from-mongo76bd4e93a3ed
+# cat /tmp/tmp-file-from-mongo76bd4e93a3ed
+#* content of a file
+
+# Remove a file by id
+mb$remove(id)
+
+# Clean
+mb$drop()
